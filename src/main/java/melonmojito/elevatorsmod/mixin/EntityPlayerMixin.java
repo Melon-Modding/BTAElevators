@@ -2,10 +2,11 @@ package melonmojito.elevatorsmod.mixin;
 
 import melonmojito.elevatorsmod.ElevatorsMod;
 import melonmojito.elevatorsmod.server.ElevatorBlock;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.entity.EntityLiving;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.World;
-import net.minecraft.server.entity.player.EntityPlayerMP;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(value = EntityPlayerMP.class, remap = false)
-public abstract class EntityPlayerMPMixin extends EntityPlayer {
+@Mixin(value = EntityPlayer.class, remap = false)
+public abstract class EntityPlayerMixin extends EntityLiving {
 
 	@Unique
 	protected int elevatorBlockX;
@@ -24,10 +25,14 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 	@Unique
 	protected int elevatorBlockZ;
 	@Unique
+	protected boolean stoodOnElevator;
+	@Unique
 	protected double py = 0;
 	@Unique
 	protected int cooldown = 0;
-	public EntityPlayerMPMixin(World world) {
+	@Unique
+	protected EntityPlayer thisAs = (EntityPlayer)(Object)this;
+	public EntityPlayerMixin(World world) {
 		super(world);
 	}
 
@@ -45,26 +50,31 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 				int blockX = (int) cube.minX;
 				int blockY = (int) cube.minY;
 				int blockZ = (int) cube.minZ;
+				Block blockUnderFeet = world.getBlock(blockX, blockY, blockZ);
 
-				if(world.getBlock(blockX, blockY, blockZ) instanceof ElevatorBlock) {
+				if(blockUnderFeet instanceof ElevatorBlock) {
+					stoodOnElevator = true;
 					elevatorBlockX = blockX;
 					elevatorBlockY = blockY;
 					elevatorBlockZ = blockZ;
+				} else if (blockUnderFeet != null) {
+					stoodOnElevator = false;
 				}
 
-				if(isSneaking() && cooldown <= 0 && world.getBlock(blockX, blockY, blockZ) instanceof ElevatorBlock){
-					ElevatorBlock.sneak(world, blockX, blockY, blockZ, (EntityPlayerMP)(Object)this);
-					cooldown = 2; /*ElevatorsMod.config.getInt("ElevatorCooldown");*/
+				if(isSneaking() && cooldown <= 0 && blockUnderFeet instanceof ElevatorBlock && stoodOnElevator){
+					ElevatorBlock.sneak(world, blockX, blockY, blockZ, thisAs);
+					cooldown = ElevatorsMod.elevatorCooldown;
+					stoodOnElevator = false;
 					return;
 				}
 			}
 		}
 
 
-		if(dy > 0.2 && cooldown <= 0 && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.5f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.5f && this.y - elevatorBlockY > 0){
-
-			ElevatorBlock.jump(world, elevatorBlockX, elevatorBlockY, elevatorBlockZ, (EntityPlayerMP)(Object)this);
-			cooldown = 2; /*ElevatorsMod.config.getInt("ElevatorCooldown");*/
+		if(dy > 0.2 &&  cooldown <= 0  && stoodOnElevator && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.5f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.5f && this.y - elevatorBlockY > 0){
+			ElevatorBlock.jump(world, elevatorBlockX, elevatorBlockY, elevatorBlockZ, thisAs);
+			cooldown = ElevatorsMod.elevatorCooldown;
+			stoodOnElevator = false;
 			return;
 		}
 	}
