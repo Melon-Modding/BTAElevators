@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "elevatorsmod",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This mod aims to help new BTA modders.",
+  "name": "Elevators Mod",
+  "description": "This mod adds simple, server-side elevators to BTA!",
   "authors": [
-    "Turnip Labs"
+    "WatermelonMojito"
   ],
   "contact": {
     "homepage": "",
@@ -18,11 +18,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-        "turniplabs.examplemod.ExampleMod"
+        "melonmojito.elevatorsmod.ElevatorsMod"
     ]
   },
   "mixins": [
-      "examplemod.mixins.json"
+    "elevatorsmod.mixins.json"
   ],
 
   "depends": {
