@@ -1,6 +1,6 @@
-package melonmojito.elevatorsmod;
+package watermelonmojito.elevatorsmod;
 
-import melonmojito.elevatorsmod.server.ElevatorBlock;
+import watermelonmojito.elevatorsmod.server.ElevatorBlock;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.sound.block.BlockSoundDispatcher;
 import net.minecraft.client.sound.block.BlockSounds;

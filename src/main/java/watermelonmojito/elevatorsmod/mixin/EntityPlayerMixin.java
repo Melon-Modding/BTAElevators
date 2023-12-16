@@ -1,7 +1,7 @@
-package melonmojito.elevatorsmod.mixin;
+package watermelonmojito.elevatorsmod.mixin;
 
-import melonmojito.elevatorsmod.ElevatorsMod;
-import melonmojito.elevatorsmod.server.ElevatorBlock;
+import watermelonmojito.elevatorsmod.ElevatorsMod;
+import watermelonmojito.elevatorsmod.server.ElevatorBlock;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.EntityLiving;
 import net.minecraft.core.entity.player.EntityPlayer;
