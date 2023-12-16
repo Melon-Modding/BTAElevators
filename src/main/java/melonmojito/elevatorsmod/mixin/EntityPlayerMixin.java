@@ -57,8 +57,9 @@ public abstract class EntityPlayerMixin extends EntityLiving {
 					elevatorBlockX = blockX;
 					elevatorBlockY = blockY;
 					elevatorBlockZ = blockZ;
-				} else if (blockUnderFeet != null) {
+				} else if (blockUnderFeet != null || world.getBlockId(blockX, blockY, blockZ) == 0) {
 					stoodOnElevator = false;
+					cooldown += 1;
 				}
 
 				if(isSneaking() && cooldown <= 0 && blockUnderFeet instanceof ElevatorBlock && stoodOnElevator){
@@ -71,7 +72,7 @@ public abstract class EntityPlayerMixin extends EntityLiving {
 		}
 
 
-		if(dy > 0.2 &&  cooldown <= 0  && stoodOnElevator && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.5f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.5f && this.y - elevatorBlockY > 0){
+		if(dy > 0.075 &&  cooldown <= 0  && stoodOnElevator && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.5f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.5f && this.y - elevatorBlockY > 0){
 			ElevatorBlock.jump(world, elevatorBlockX, elevatorBlockY, elevatorBlockZ, thisAs);
 			cooldown = ElevatorsMod.elevatorCooldown;
 			stoodOnElevator = false;
