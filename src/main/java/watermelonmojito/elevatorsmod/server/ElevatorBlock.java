@@ -13,42 +13,46 @@ public class ElevatorBlock extends Block{
 		super(key, id, material);
 	}
 
-	public static void jump(World world, int x, int y, int z, EntityPlayer player){
+	// returns true if we teleported
+	public static boolean jump(World world, int x, int y, int z, EntityPlayer player){
 		int counter = 2;
 		for(int y2 = y+1; y2 < 255; y2++){
 			if(counter > 0){
 				counter--;
-				if (world.getBlockId(x, y2, z) == 437){
-					return;
+				if (world.getBlockId(x, y2, z) == Block.blockSteel.id){
+					break;
 				}
 			}
 			if(world.getBlock(x, y2, z) instanceof ElevatorBlock){
 				teleport(x+0.5, y2+1, z+0.5, player);
-
-				break;
+				return true;
 			}
 			else if (world.getBlockId(x, y2, z) != 0 && !ElevatorsMod.allowObstructions) {
 				break;
 			}
 		}
+		return false;
 	}
-	public static void sneak(World world, int x, int y, int z, EntityPlayer player){
+
+	// returns true if we teleported
+	public static boolean sneak(World world, int x, int y, int z, EntityPlayer player){
 		int counter = 2;
 		for(int y2 = y-1; y2 > 0; y2--){
 			if(counter > 0){
 				counter--;
-				if (world.getBlockId(x, y2, z) == 437){
-					return;
+				if (world.getBlockId(x, y2, z) == Block.blockSteel.id){
+					break;
 				}
 			}
 			if(world.getBlock(x, y2, z) instanceof ElevatorBlock){
 				teleport(x+0.5, y2+1, z+0.5, player);
-				break;
+				return true;
 			}
 			else if (world.getBlockId(x, y2, z) != 0 && !ElevatorsMod.allowObstructions) {
 				break;
 			}
 		}
+		return false;
 	}
 
 	public static void teleport(double x, double y, double z, EntityPlayer player){
