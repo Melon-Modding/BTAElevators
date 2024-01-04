@@ -32,6 +32,7 @@ public abstract class EntityPlayerMixin extends EntityLiving {
 	protected int cooldown = 0;
 	@Unique
 	protected EntityPlayer thisAs = (EntityPlayer)(Object)this;
+
 	public EntityPlayerMixin(World world) {
 		super(world);
 	}
@@ -63,20 +64,29 @@ public abstract class EntityPlayerMixin extends EntityLiving {
 				}
 
 				if(isSneaking() && cooldown <= 0 && blockUnderFeet instanceof ElevatorBlock && stoodOnElevator){
-					ElevatorBlock.sneak(world, blockX, blockY, blockZ, thisAs);
-					cooldown = ElevatorsMod.elevatorCooldown;
-					stoodOnElevator = false;
+					if (ElevatorBlock.sneak(world, blockX, blockY, blockZ, thisAs))
+						cooldown = ElevatorsMod.elevatorCooldown;
 					return;
 				}
 			}
 		}
 
 
-		if(dy > 0.075 &&  cooldown <= 0  && stoodOnElevator && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.5f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.5f && this.y - elevatorBlockY > 0){
-			ElevatorBlock.jump(world, elevatorBlockX, elevatorBlockY, elevatorBlockZ, thisAs);
-			cooldown = ElevatorsMod.elevatorCooldown;
-			stoodOnElevator = false;
-			return;
+		if(dy > 0.109 && cooldown <= 0 && stoodOnElevator && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.5f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.5f && this.y - elevatorBlockY > 0){
+			if (ElevatorBlock.jump(world, elevatorBlockX, elevatorBlockY, elevatorBlockZ, thisAs)) {
+				// reset y velocity and cooldown if we teleported
+				cooldown = ElevatorsMod.elevatorCooldown;
+				this.yd = 0;
+			}
+		}
+	}
+
+	@Inject(method = "jump",at=@At("HEAD"),cancellable = true)
+	public void jump(CallbackInfo ci) {
+		// prevent a jump if we just used an elevator
+		// this is ONLY called clientside, theirs no good way to prevent it in multiplayer
+		if (cooldown > 0) {
+			ci.cancel();
 		}
 	}
 }
