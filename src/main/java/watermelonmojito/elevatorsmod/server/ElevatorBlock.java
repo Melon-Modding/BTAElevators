@@ -56,6 +56,8 @@ public class ElevatorBlock extends Block{
 	}
 
 	public static void teleport(double x, double y, double z, EntityPlayer player){
+		if (player.world.isClientSide)
+			return;
 		if (player instanceof EntityPlayerMP){
 			EntityPlayerMP playerMP = (EntityPlayerMP)player;
 			playerMP.playerNetServerHandler.teleport(x, y, z);
