@@ -72,7 +72,7 @@ public abstract class EntityPlayerMixin extends EntityLiving {
 		}
 
 
-		if(dy > 0.109 && cooldown <= 0 && stoodOnElevator && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.5f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.5f && this.y - elevatorBlockY > 0){
+		if(dy > 0.109 && cooldown <= 0 && stoodOnElevator && Math.abs(this.x - (elevatorBlockX+0.5f)) < 0.6f && Math.abs(this.z - (elevatorBlockZ+0.5f)) < 0.6f && this.y - elevatorBlockY > 0){
 			if (ElevatorBlock.jump(world, elevatorBlockX, elevatorBlockY, elevatorBlockZ, thisAs)) {
 				// reset y velocity and cooldown if we teleported
 				cooldown = ElevatorsMod.elevatorCooldown;
