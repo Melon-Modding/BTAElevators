@@ -4,7 +4,6 @@ import net.minecraft.core.sound.BlockSoundDispatcher;
 import net.minecraft.core.sound.BlockSounds;
 import watermelonmojito.elevatorsmod.server.ElevatorBlock;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.core.Global;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
@@ -38,7 +37,6 @@ public class ElevatorsMod implements ModInitializer {
 		BlockSoundDispatcher.getInstance();
 		Block.blocksList[437] = null;
 		Block.blocksList[437] = elevator = new ElevatorBlock("block.steel", 437, Material.metal)
-			.withTexCoords(19, 4, 19, 6, 19, 5)
 			.withHardness(5.0F).withBlastResistance(2000.0F)
 			.withTags(BlockTags.MINEABLE_BY_PICKAXE);
 		BlockSoundDispatcher.getInstance().addDispatch(ElevatorsMod.elevator, BlockSounds.METAL);

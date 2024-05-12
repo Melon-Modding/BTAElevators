@@ -27,6 +27,8 @@ public abstract class EntityPlayerMixin extends EntityLiving {
 	@Unique
 	protected boolean stoodOnElevator;
 	@Unique
+	protected int gracePeriod = 0;
+	@Unique
 	protected double py = 0;
 	@Unique
 	protected int cooldown = 0;
@@ -54,13 +56,21 @@ public abstract class EntityPlayerMixin extends EntityLiving {
 				Block blockUnderFeet = world.getBlock(blockX, blockY, blockZ);
 
 				if(blockUnderFeet instanceof ElevatorBlock) {
+					gracePeriod = 0;
 					stoodOnElevator = true;
 					elevatorBlockX = blockX;
 					elevatorBlockY = blockY;
 					elevatorBlockZ = blockZ;
-				} else if (blockUnderFeet != null || world.getBlockId(blockX, blockY, blockZ) == 0) {
-					stoodOnElevator = false;
-					cooldown += 1;
+				}
+
+				else if (blockUnderFeet != null || world.getBlockId(blockX, blockY, blockZ) == 0) {
+					if(gracePeriod < 80){
+						gracePeriod++;
+					}
+					if(gracePeriod == 80) {
+						stoodOnElevator = false;
+						cooldown += 1;
+					}
 				}
 
 				if(isSneaking() && cooldown <= 0 && blockUnderFeet instanceof ElevatorBlock && stoodOnElevator){
